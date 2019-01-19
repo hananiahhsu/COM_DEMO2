@@ -60,10 +60,12 @@ HRESULT RegisterServer(const CLSID& clsid,         // Class ID
 	strcat(szKey, szCLSID) ;
   
 	CString s1(szKey);
-	MessageBox(NULL, s1, "", MB_OK);
+	MessageBox(NULL, s1, L"CLSID-XUXU", MB_OK);
 
 
 	// Add the CLSID to the registry.
+	CString szDes(szDescription);
+	MessageBox(NULL, szDes, L"--szDescription--", MB_OK);//2019.1.19
 	SetKeyAndValue(szKey, NULL, szDescription) ;
 
 	// Add the server filename subkey under the CLSID key.
@@ -71,11 +73,13 @@ HRESULT RegisterServer(const CLSID& clsid,         // Class ID
 
 
 	CString sMoudle(szFileName);
-	MessageBox(NULL, sMoudle, "", MB_OK);
+	MessageBox(NULL, sMoudle, L"--szFileName-XUXU", MB_OK);
 
 
 	// Add the ProgID subkey under the CLSID key.
 	if (szProgID != NULL) {
+		CString strProgId(szProgID);
+		MessageBox(NULL, strProgId, L"--szProgID--", MB_OK);//2019.1.19
 		SetKeyAndValue(szKey, "ProgID", szProgID) ;
 		SetKeyAndValue(szProgID, "CLSID", szCLSID) ;
 	}
@@ -93,6 +97,8 @@ HRESULT RegisterServer(const CLSID& clsid,         // Class ID
 		// Add the versioned ProgID subkey under HKEY_CLASSES_ROOT.
 		SetKeyAndValue(szProgID, NULL, szDescription) ; 
 		SetKeyAndValue(szProgID, "CLSID", szCLSID) ;
+
+		MessageBox(NULL, L"PROGID", L"XUXU", MB_OK);
 	}
 
 	return S_OK ;
@@ -156,13 +162,32 @@ void CLSIDtoString(const CLSID& clsid,
 * 函数： THCAR2Char 
 * 描述：将TCHAR* 转换为 char*
 ***********************************************************************/
-//char* THCAR2char(TCHAR* tchStr)
-//{
-//	int iLen = 2 * wcslen(tchStr);//CString,TCHAR汉字算一个字符，因此不用普通计算长度 
-//	char* chRtn = new char[iLen + 1];
-//		wcstombs(chRtn, tchStr, iLen + 1);//转换成功返回为非负值 
-//	return chRtn;
-//}
+char* THCAR2char(TCHAR* tchStr)
+{
+	int iLen = 2 * wcslen(tchStr);//CString,TCHAR汉字算一个字符，因此不用普通计算长度 
+	char* chRtn = new char[iLen + 1];
+		wcstombs(chRtn, tchStr, iLen + 1);//转换成功返回为非负值 
+	return chRtn;
+}
+
+void CharToWCHAR(char* szStr)
+{
+	WCHAR wszClassName[256];
+	memset(wszClassName, 0, sizeof(wszClassName));
+	MultiByteToWideChar(CP_ACP, 0, szStr, strlen(szStr) + 1, wszClassName,
+		sizeof(wszClassName) / sizeof(wszClassName[0]));
+}
+
+
+WCHAR * charToWchar(const char *s)
+{
+	int w_nlen = MultiByteToWideChar(CP_ACP, 0, s, -1, NULL, 0);
+	WCHAR *ret;
+	ret = (WCHAR*)malloc(sizeof(WCHAR)*w_nlen);
+	memset(ret, 0, sizeof(ret));
+	MultiByteToWideChar(CP_ACP, 0, s, strlen(s)+1, ret, w_nlen);
+	return ret;
+}
 
 
 //
@@ -173,10 +198,9 @@ LONG DeleteKey(HKEY hKeyParent,           // Parent of key to delete
 {
 	// Open the child.
 	HKEY hKeyChild ;
-	//CString str(lpszKeyChild);
-	//USES_CONVERSION;
-	//LPCWSTR lp_KeyChild = A2CW(W2A(str));
-	LONG lRes = RegOpenKeyEx(hKeyParent, lpszKeyChild, 0,
+
+	LPCWSTR lp_KeyChild = charToWchar(lpszKeyChild);//2019.1.18
+	LONG lRes = RegOpenKeyEx(hKeyParent, lp_KeyChild, 0,
 	                         KEY_ALL_ACCESS, &hKeyChild) ;
 	if (lRes != ERROR_SUCCESS)
 	{
@@ -191,8 +215,8 @@ LONG DeleteKey(HKEY hKeyParent,           // Parent of key to delete
 	                    NULL, NULL, &time) == S_OK)
 	{
 		// Delete the decendents of this child.
-		//c_Buffer = THCAR2char(szBuffer);
-		lRes = DeleteKey(hKeyChild, szBuffer) ;
+		c_Buffer = THCAR2char(szBuffer);
+		lRes = DeleteKey(hKeyChild, c_Buffer) ;
 		if (lRes != ERROR_SUCCESS)
 		{
 			// Cleanup before exiting.
@@ -206,7 +230,7 @@ LONG DeleteKey(HKEY hKeyParent,           // Parent of key to delete
 	RegCloseKey(hKeyChild) ;
 
 	// Delete this child.
-	return RegDeleteKey(hKeyParent, lpszKeyChild) ;
+	return RegDeleteKey(hKeyParent, lp_KeyChild) ;
 }
 
 //
@@ -230,11 +254,10 @@ BOOL SetKeyAndValue(const char* szKey,
 	}
 
 	// Create and open key and subkey.
-	//CString str(szKeyBuf);
-	//USES_CONVERSION;
-	//LPCWSTR lp_key_buf = A2CW(W2A(str));;
+	LPCWSTR lpSubKey = charToWchar(szKeyBuf);//2019.1.18
+	MessageBox(NULL, lpSubKey, L"---lpSubKey---", MB_OK);
 	long lResult = RegCreateKeyEx(HKEY_CLASSES_ROOT ,
-		                          szKeyBuf,
+		                          lpSubKey,
 	                              0, NULL, REG_OPTION_NON_VOLATILE,
 	                              KEY_ALL_ACCESS, NULL, 
 	                              &hKey, NULL) ;
@@ -246,7 +269,8 @@ BOOL SetKeyAndValue(const char* szKey,
 	// Set the Value.
 	if (szValue != NULL)
 	{
-		RegSetValueEx(hKey, NULL, 0, REG_SZ, 
+		//2019.1.19
+		RegSetValueExA(hKey, NULL, 0, REG_SZ, 
 		              (BYTE *)szValue, 
 		              strlen(szValue)+1) ;
 	}

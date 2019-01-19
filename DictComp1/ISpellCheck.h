@@ -3,9 +3,9 @@
 
 #include "Unknwn.h"
 
-#ifndef String
-typedef unsigned short *String;
-#endif
+//#ifndef String
+//typedef unsigned short *String;
+//#endif
 
 // {54BF6569-1007-11D1-B0AA-444553540000}
 extern "C" const GUID IID_SpellCheck;
@@ -13,7 +13,7 @@ extern "C" const GUID IID_SpellCheck;
 class ISpellCheck : public IUnknown 
 {
 	public : 
-		virtual BOOL __stdcall CheckWord(String, String*) = 0;
+		virtual BOOL __stdcall CheckWord(BSTR, BSTR*) = 0;
 };
 
 #endif // __ISpellCheck_H__

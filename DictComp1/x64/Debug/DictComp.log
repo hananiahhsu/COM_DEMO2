@@ -1,0 +1,37 @@
+﻿  DictComp.cpp
+  _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(90): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(177): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(181): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(313): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(354): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(2254): note: see declaration of 'sscanf'
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(359): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(2254): note: see declaration of 'sscanf'
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(383): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(2254): note: see declaration of 'sscanf'
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(384): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(2254): note: see declaration of 'sscanf'
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(398): warning C4996: 'strupr': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strupr. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(603): note: see declaration of 'strupr'
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(401): warning C4996: 'strupr': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strupr. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(603): note: see declaration of 'strupr'
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(404): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(405): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(417): warning C4996: 'strupr': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strupr. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(603): note: see declaration of 'strupr'
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(420): warning C4996: 'strupr': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strupr. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(603): note: see declaration of 'strupr'
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(436): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(442): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(481): warning C4996: 'strupr': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strupr. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(603): note: see declaration of 'strupr'
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(487): warning C4996: 'strupr': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strupr. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(603): note: see declaration of 'strupr'
+j:\readmem\com_demo2\dictcomp1\dictcomp.cpp(225): warning C4715: 'DllRegisterServer': not all control paths return a value
+  DictComp.vcxproj -> J:\ReadMem\com_demo2\DictComp1\x64\Debug\DictComp.dll

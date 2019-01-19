@@ -122,6 +122,69 @@ char* ConvertLPWSTRToLPSTR(LPWSTR lpwszStrIn)
 //}
 
 
+//void TCHAR2Char(const TCHAR* tchar, char* _char)
+//{
+//	int iLength = 0;
+//	iLength = WideCharToMultiByte(CP_ACP, 0, tchar, -1, NULL, 0, NULL, NULL);
+//	WideCharToMultiByte(CP_ACP, 0, tchar, -1, _char, iLength, NULL, NULL);
+//}
+
+
+//char* CStringToChar(CString str)
+//{
+//	int n = str.GetLength();
+//	int len = WideCharToMultiByte(CP_ACP, 0, str, str.GetLength(), NULL, 0, NULL, NULL);
+//	char * pFileName = new char[len + 1];
+//	WideCharToMultiByte(CP_ACP, 0, str, str.GetLength(), pFileName, len, NULL, NULL);
+//	pFileName[len + 1] = '\0';
+//	return pFileName;
+//}
+
+//void CStringToChar(CString str, char ch[])
+//{
+//	char* tmpch;
+//	int wLen = WideCharToMultiByte(CP_ACP, 0, str, -1, NULL, 0, NULL, NULL);
+//	tmpch = new char[wLen + 1];
+//	WideCharToMultiByte(CP_ACP, 0, str, -1, tmpch, wLen, NULL, NULL);
+//	for (int i = 0; i < wLen; ++i)
+//		ch[i] = tmpch[i];
+//}
+
+
+
+//ok
+//char* UsrCStringToChar(CString str)
+//{
+//	int n = str.GetLength(); 
+//	int len = WideCharToMultiByte(CP_ACP, 0, str, n, NULL, 0, NULL, NULL); 
+//	char *pChar = new char[len + 1]; //以字节为单位
+//	WideCharToMultiByte(CP_ACP, 0, str, n, pChar, len, NULL, NULL); //宽字节编码转换成多字节编码
+//	pChar[len + 1] = '\0'; //多字节字符以'\0'结束
+//	return pChar;
+//}
+
+
+
+// ANSI To UNCODE转换
+CString AnsiToUnicode(char * szAnsi, int len)
+{
+	CString str;
+	//预转换，得到所需空间的大小
+	int wcsLen;
+	if (len > 0)
+		wcsLen = len;
+	else
+		wcsLen = ::MultiByteToWideChar(CP_ACP, NULL, szAnsi, strlen(szAnsi), NULL, 0);
+	//分配空间要给'\0'留个空间，MultiByteToWideChar不会给'\0'空间
+	wchar_t* wszString = new wchar_t[wcsLen + 1];
+	//转换
+	::MultiByteToWideChar(CP_ACP, NULL, szAnsi, strlen(szAnsi), wszString, wcsLen);
+	//最后加上'\0'
+	wszString[wcsLen] = '\0'; 
+	str = wszString;
+	delete wszString;
+	return str;
+}
 
 
 
@@ -131,30 +194,33 @@ char* ConvertLPWSTRToLPSTR(LPWSTR lpwszStrIn)
 extern "C" HRESULT __stdcall DllRegisterServer()
 {
 	TCHAR szModule[1024];
+	char  *pChPath=NULL;
 	CString str_path;
-	//DWORD dwResult = GetModuleFileName((HMODULE)g_hModule, str_path.GetBufferSetLength(1024), 1024);
-	//LPWSTR lp_module = CA2W(szModule);
+
 	DWORD dwResult = GetModuleFileName((HMODULE)g_hModule, szModule, 1024);
 	if (dwResult == 0)
 	{
-		MessageBox(NULL,"REG FAILED","",MB_OK);
+		MessageBox(NULL,L"REG FAILED",L"",MB_OK);
 		return SELFREG_E_CLASS;
 	}
 
 	CString sMoudle(szModule);
-	MessageBox(NULL, sMoudle, "", MB_OK);
-	//char szStr[1024] = {};
-	//wcstombs(szStr, sMoudle, sMoudle.GetLength());//将宽字符转换成多字符 
+	MessageBox(NULL, sMoudle, L"sMoudle", MB_OK);
 
-	//CString sss(szStr);
-	//MessageBox(NULL, sss, "", MB_OK);
+	USES_CONVERSION;
+	std::string s(W2A(sMoudle));
+	CString str(s.c_str());
+	MessageBox(NULL, str, L"---pChPath---", MB_OK);
+
+
+
 	if (S_OK != RegisterServer(CLSID_Dictionary,
-		szModule,
+		s.c_str(),
 		"Dictionary.Object",
 		"Dictionary Component",
 		NULL))
 	{
-		MessageBox(NULL, "REG SERVER FAILED", "", MB_OK);
+		MessageBox(NULL, L"REG SERVER FAILED", L"", MB_OK);
 	}
 }
 
@@ -239,7 +305,7 @@ BOOL CDictionary::Initialize()
 	return TRUE;
 }
 
-BOOL CDictionary::LoadLibrary(String filename)
+BOOL CDictionary::LoadLibrary(LPCWSTR filename)
 {
 	BSTR bstrText = ::SysAllocString((BSTR)filename);
 	char *pFileName = _com_util::ConvertBSTRToString((BSTR)filename);
@@ -275,6 +341,9 @@ BOOL CDictionary::LoadLibrary(String filename)
 	Initialize();
 	m_nStructNumber = nTotalNumber+100;
 	m_pData = new DictWord[m_nStructNumber];
+	char c = '\0';
+	memcpy(m_pData->wordForLang1,&c,1);
+	memcpy(m_pData->wordForLang2,&c,1);
 	m_nWordNumber = 0;
 	
 	while(!feof(fp)) {
@@ -287,7 +356,7 @@ BOOL CDictionary::LoadLibrary(String filename)
 			printf("Read the second string failed!\n");
 			break;
 		}
-		sscanf_s(LineBuffer, "%s", m_pData[m_nWordNumber].wordForLang2);
+		sscanf(LineBuffer, "%s", m_pData[m_nWordNumber].wordForLang2);
 		m_nWordNumber ++;
 		if (m_nWordNumber == nTotalNumber)
 			break;
@@ -300,7 +369,7 @@ BOOL CDictionary::LoadLibrary(String filename)
 	return TRUE;
 }
 
-BOOL CDictionary::InsertWord(String word1, String word2)
+BOOL CDictionary::InsertWord(BSTR word1, BSTR word2)
 {
 	char *pWord1, *pWord2;
 	if (m_nWordNumber < m_nStructNumber) {
@@ -311,8 +380,10 @@ BOOL CDictionary::InsertWord(String word1, String word2)
 			*(pWord1+MaxWordLength-1) = '\0';
 		if (strlen(pWord2) > MaxWordLength)
 			*(pWord2+MaxWordLength-1) = '\0';
-		strcpy(m_pData[m_nWordNumber].wordForLang1, pWord1);
-		strcpy(m_pData[m_nWordNumber].wordForLang2, pWord2);
+		sscanf(pWord1, "%s", m_pData[m_nWordNumber].wordForLang1);//2019.1.19
+		sscanf(pWord2, "%s", m_pData[m_nWordNumber].wordForLang2);//2019.1.19
+		//strcpy(m_pData[m_nWordNumber].wordForLang1, pWord1);
+		//strcpy(m_pData[m_nWordNumber].wordForLang2, pWord2);
 		m_nWordNumber ++ ;
 		delete pWord1;
 		delete pWord2;
@@ -321,7 +392,7 @@ BOOL CDictionary::InsertWord(String word1, String word2)
 	return FALSE;
 }
 
-void CDictionary::DeleteWord(String word)
+void CDictionary::DeleteWord(BSTR word)
 {
 	char *pWord = _com_util::ConvertBSTRToString((BSTR)word);
 	char *pUpperWord = strupr(pWord);
@@ -340,7 +411,7 @@ void CDictionary::DeleteWord(String word)
 	delete pWord;
 }
 
-BOOL CDictionary::LookupWord(String word, String *resultWord)
+BOOL CDictionary::LookupWord(BSTR word, BSTR *resultWord)
 {
 	char *pWord = _com_util::ConvertBSTRToString((BSTR)word);
 	char *pUpperWord = strupr(pWord);
@@ -348,7 +419,7 @@ BOOL CDictionary::LookupWord(String word, String *resultWord)
 	{
 		char *tmpWord = strupr(m_pData[i].wordForLang1);
 		if (strcmp(tmpWord, pWord) == 0) {
-			*resultWord = (String)(_com_util::ConvertStringToBSTR(m_pData[i].wordForLang2));
+			*resultWord = (BSTR)(_com_util::ConvertStringToBSTR(m_pData[i].wordForLang2));
 			delete pWord;
 			return TRUE;
 		}
@@ -358,7 +429,7 @@ BOOL CDictionary::LookupWord(String word, String *resultWord)
 	return FALSE;
 }
 
-BOOL CDictionary::RestoreLibrary(String filename)
+BOOL CDictionary::RestoreLibrary(BSTR filename)
 {
 	char *pFileName = _com_util::ConvertBSTRToString((BSTR)filename);
 	FILE *fp;
@@ -404,7 +475,7 @@ void CDictionary::FreeLibrary()
 }
 
 	
-BOOL CDictionary::CheckWord (String word, String *resultWord)
+BOOL CDictionary::CheckWord (BSTR word, BSTR *resultWord)
 {
 	char *pWord = _com_util::ConvertBSTRToString((BSTR)word);
 	char *pUpperWord = strupr(pWord);
@@ -434,9 +505,9 @@ BOOL CDictionary::CheckWord (String word, String *resultWord)
 	
 	*resultWord = NULL;
 	if (nMinIndex != -1)
-		*resultWord = (String)_com_util::ConvertStringToBSTR(m_pData[nMinIndex].wordForLang1);
+		*resultWord = (BSTR)_com_util::ConvertStringToBSTR(m_pData[nMinIndex].wordForLang1);
 	else if (nMaxIndex != -1)
-		*resultWord = (String)_com_util::ConvertStringToBSTR(m_pData[nMaxIndex].wordForLang1);
+		*resultWord = (BSTR)_com_util::ConvertStringToBSTR(m_pData[nMaxIndex].wordForLang1);
 	delete pWord;
 	return FALSE;
 }

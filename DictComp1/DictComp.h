@@ -29,15 +29,15 @@ class CDictionary : public IDictionary ,  public ISpellCheck
 
 	// IDictionary member function
 		virtual BOOL __stdcall Initialize();
-		virtual BOOL __stdcall LoadLibrary(String);
-		virtual BOOL __stdcall InsertWord(String, String);
-		virtual void __stdcall DeleteWord(String);
-		virtual BOOL __stdcall LookupWord(String, String *);
-		virtual BOOL __stdcall RestoreLibrary(String);
+		virtual BOOL __stdcall LoadLibrary(LPCWSTR);
+		virtual BOOL __stdcall InsertWord(BSTR, BSTR);
+		virtual void __stdcall DeleteWord(BSTR);
+		virtual BOOL __stdcall LookupWord(BSTR, BSTR *);
+		virtual BOOL __stdcall RestoreLibrary(BSTR);
 		virtual void __stdcall FreeLibrary();
 	
 	// ISpellCheck member function
-		virtual BOOL __stdcall CheckWord (String word, String *);
+		virtual BOOL __stdcall CheckWord (BSTR word, BSTR *);
 	
 	private :
 		struct	DictWord *m_pData;
