@@ -12,11 +12,11 @@ class IDictionary : public IUnknown
 {
 	public : 
 		virtual BOOL __stdcall Initialize() = 0;
-		virtual BOOL __stdcall LoadLibrary(String) = 0;
-		virtual BOOL __stdcall InsertWord(String, String) = 0;
-		virtual void __stdcall DeleteWord(String) = 0;
-		virtual BOOL __stdcall LookupWord(String, String *) = 0;
-		virtual BOOL __stdcall RestoreLibrary(String) = 0;
+		virtual BOOL __stdcall LoadLibrary(LPCWSTR) = 0;
+		virtual BOOL __stdcall InsertWord(BSTR, BSTR) = 0;
+		virtual void __stdcall DeleteWord(BSTR) = 0;
+		virtual BOOL __stdcall LookupWord(BSTR, BSTR *) = 0;
+		virtual BOOL __stdcall RestoreLibrary(BSTR) = 0;
 		virtual void __stdcall FreeLibrary() = 0;
 };
 

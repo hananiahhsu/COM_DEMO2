@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
 	IUnknown *pUnknown;
 	IDictionary *pDictionary;
 	ISpellCheck *pSpellCheck;
-	String stringResult;
+	BSTR stringResult;
 	BOOL bResult;
 	HRESULT hResult;
 
@@ -87,14 +87,15 @@ int main(int argc, char* argv[])
 		return -3;
 	}
 	//2018.10.8---------------------------------------------------------------
-	CString str1("animal.dict");
+	CString str1("J:\\ReadMem\\com_demo2\\DictCtrl\\x64\\Debug\\animal.dict");
 	USES_CONVERSION;
 	LPCWSTR lp_str = A2CW(W2A(str1));
 
-	bResult = pDictionary->LoadLibrary((String)lp_str);//2018.10.8
+
+	bResult = pDictionary->LoadLibrary(lp_str);//2018.10.8
 	if (bResult) {
-		String stringResult;
-		bResult = pDictionary->LookupWord((String)String2LPCWSTR(L"tiger"), &stringResult);
+		BSTR stringResult;
+		bResult = pDictionary->LookupWord((BSTR)(L"tiger"), &stringResult);
 		
 		if (bResult) {
 			char *pTiger = _com_util::ConvertBSTRToString((BSTR)stringResult);
@@ -102,11 +103,11 @@ int main(int argc, char* argv[])
 			delete pTiger;
 		}
 
-		pDictionary->InsertWord((String)String2LPCWSTR(L"elephant"), (String)String2LPCWSTR(L"Ïó"));
-		bResult = pDictionary->LookupWord((String)String2LPCWSTR(L"elephant"), &stringResult);
+		pDictionary->InsertWord((BSTR)(L"elephant"), (BSTR)(L"Ïó"));
+		bResult = pDictionary->LookupWord((BSTR)(L"elephant"), &stringResult);
 		if (bResult) {
 
-			pDictionary->RestoreLibrary((String)String2LPCWSTR(L"animal1.dict"));
+			pDictionary->RestoreLibrary((BSTR)(L"J:\\ReadMem\\com_demo2\\DictCtrl\\x64\\Debug\\animal1.dict"));
 		}
 	} else {
 		printf("Load Library \"animal.dict\"\n");
@@ -120,7 +121,7 @@ int main(int argc, char* argv[])
 		return -4;
 	}
 
-	bResult = pSpellCheck->CheckWord((String)String2LPCWSTR(L"lion"), &stringResult);
+	bResult = pSpellCheck->CheckWord((BSTR)(L"lion"), &stringResult);
 	if (bResult) {
 		printf("Word \"lion\" spelling right.\n");
 	} else {
@@ -128,7 +129,7 @@ int main(int argc, char* argv[])
 		printf("Word \"lion\" spelling is wrong. Maybe it is %s.\n", pLion);
 		delete pLion;
 	}
-	bResult = pSpellCheck->CheckWord((String)String2LPCWSTR(L"dot"), &stringResult);
+	bResult = pSpellCheck->CheckWord((BSTR)(L"dot"), &stringResult);
 	if (bResult) {
 		printf("Word \"dot\" spelling right.\n");
 	} else {
@@ -142,5 +143,7 @@ int main(int argc, char* argv[])
 		printf("The reference count of dictionary object is zero.");
 
 	CoUninitialize();
+	Sleep(100000);
+
 	return 0;
 }

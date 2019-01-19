@@ -244,6 +244,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IDictionary.h" />
+    <ClInclude Include="IMyUnknown.h" />
+    <ClInclude Include="ISpellCheck.h" />
     <ClInclude Include="StdAfx.h" />
   </ItemGroup>
   <ItemGroup>
